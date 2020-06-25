@@ -68,7 +68,7 @@ scrape_configs:
    scheme: http
    static_configs:
    - targets:
-     - fake-dev.oracledx.com:19090
+     - fake-dev.example.com:19090
      labels:
        env: fake_metrics`
 
