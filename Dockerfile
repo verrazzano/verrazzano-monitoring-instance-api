@@ -7,7 +7,7 @@ FROM prom/alertmanager:v0.16.0 AS build_base_alertmanager
 # Provide promtool binary from the prometheus image 
 FROM prom/prometheus:v2.12.0 AS build_base_prometheus
 
-FROM oraclelinux:7-slim AS build_base
+FROM container-registry.oracle.com/os/oraclelinux:7-slim AS build_base
 
 RUN yum update -y \
     && yum-config-manager --save --setopt=ol7_ociyum_config.skip_if_unavailable=true \
@@ -41,7 +41,7 @@ RUN go build -o /usr/bin/cirith cmd/cirith/main.go
 ENV GOROOT /usr/lib/golang
 RUN /go/bin/swagger generate spec -o ./static/cirith.json ./...
 
-FROM oraclelinux:7-slim AS final
+FROM container-registry.oracle.com/os/oraclelinux:7-slim AS final
 
 # Add cirith user/group
 RUN groupadd -r cirith && useradd --no-log-init -r -g cirith -u 1000 cirith
