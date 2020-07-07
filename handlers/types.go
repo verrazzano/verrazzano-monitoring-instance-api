@@ -3,7 +3,6 @@
 package handlers
 
 import (
-
 	"github.com/golang/glog"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -29,7 +28,7 @@ func NewK8s(cfg *restgo.Config) (*K8s, error) {
 	cfg.GroupVersion = &s
 	cfg.APIPath = "/apis"
 	cfg.ContentType = runtime.ContentTypeJSON
-	cfg.NegotiatedSerializer = serializer.DirectCodecFactory{CodecFactory: serializer.NewCodecFactory(&runtime.Scheme{})}
+	cfg.NegotiatedSerializer = serializer.WithoutConversionCodecFactory{CodecFactory: serializer.NewCodecFactory(&runtime.Scheme{})}
 
 	myRestClient, err := restgo.RESTClientFor(cfg)
 	if err != nil {

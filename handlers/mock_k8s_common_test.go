@@ -3,6 +3,10 @@
 package handlers
 
 import (
+	"net/http"
+	"net/http/httptest"
+	"testing"
+
 	"k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -10,9 +14,6 @@ import (
 	"k8s.io/client-go/kubernetes/scheme"
 	restclient "k8s.io/client-go/rest"
 	utiltesting "k8s.io/client-go/util/testing"
-	"net/http"
-	"net/http/httptest"
-	"testing"
 )
 
 // used by unit tests to create a test server
@@ -36,7 +37,7 @@ func newRestClient(testServer *httptest.Server) (*restclient.RESTClient, error) 
 		ContentConfig: restclient.ContentConfig{
 			GroupVersion:         &v1.SchemeGroupVersion,
 			ContentType:          runtime.ContentTypeJSON,
-			NegotiatedSerializer: serializer.DirectCodecFactory{CodecFactory: scheme.Codecs},
+			NegotiatedSerializer: serializer.WithoutConversionCodecFactory{CodecFactory: scheme.Codecs},
 		},
 		Username: "user",
 		Password: "pass",

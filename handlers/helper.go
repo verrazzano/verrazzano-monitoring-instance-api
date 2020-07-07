@@ -5,6 +5,7 @@ package handlers
 import (
 	"archive/tar"
 	"bytes"
+	"context"
 	"crypto/tls"
 	"fmt"
 	"io"
@@ -288,7 +289,7 @@ func (k *K8s) modifyStorageCapacity(component string, factor float32) (string, e
 
 // Retrieves the current Verrazzano Monitoring Instance (VMI) from k8s as a JSON entity
 func (k *K8s) getVMIJson() (*gabs.Container, error) {
-	result, err := k.RestClient.Get().Resource(VMIPlural).Namespace(namespace).Name(vmiName).Do().Raw()
+	result, err := k.RestClient.Get().Resource(VMIPlural).Namespace(namespace).Name(vmiName).Do(context.TODO()).Raw()
 	if err != nil {
 		return nil, err
 	}
@@ -301,7 +302,7 @@ func (k *K8s) getVMIJson() (*gabs.Container, error) {
 
 // Updates the given Verrazzano Monitoring Instance (VMI) (specified as a JSON entity) in k8s
 func (k *K8s) updateVMIJson(vmi *gabs.Container) error {
-	_, err := k.RestClient.Put().Resource(VMIPlural).Namespace(namespace).Name(vmiName).Body(vmi.Bytes()).Do().Raw()
+	_, err := k.RestClient.Put().Resource(VMIPlural).Namespace(namespace).Name(vmiName).Body(vmi.Bytes()).Do(context.TODO()).Raw()
 	if err != nil {
 		return err
 	}
@@ -309,7 +310,7 @@ func (k *K8s) updateVMIJson(vmi *gabs.Container) error {
 }
 
 func (k *K8s) getConfigMapByName(name string) (map[string]string, error) {
-	cm, err := k.ClientSet.CoreV1().ConfigMaps(namespace).Get(name, metav1.GetOptions{})
+	cm, err := k.ClientSet.CoreV1().ConfigMaps(namespace).Get(context.TODO(), name, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -317,7 +318,7 @@ func (k *K8s) getConfigMapByName(name string) (map[string]string, error) {
 }
 
 func (k *K8s) getSecretByName(name string) (map[string][]byte, error) {
-	secret, err := k.ClientSet.CoreV1().Secrets(namespace).Get(name, metav1.GetOptions{})
+	secret, err := k.ClientSet.CoreV1().Secrets(namespace).Get(context.TODO(), name, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -333,7 +334,7 @@ func (k *K8s) getConfigMapByPath(path string) (string, map[string]string, error)
 		return "", nil, err
 	}
 	configMapName := vmi.Path(path).Data().(string)
-	cm, err := k.ClientSet.CoreV1().ConfigMaps(namespace).Get(configMapName, metav1.GetOptions{})
+	cm, err := k.ClientSet.CoreV1().ConfigMaps(namespace).Get(context.TODO(), configMapName, metav1.GetOptions{})
 	if err != nil {
 		log(LevelError, "Unable to get ConfigMap %s: %v", configMapName, err)
 		return "", nil, err
@@ -342,19 +343,19 @@ func (k *K8s) getConfigMapByPath(path string) (string, map[string]string, error)
 }
 
 func (k *K8s) updateConfigMapByName(updatedMap map[string]string, name string) error {
-	cm, err := k.ClientSet.CoreV1().ConfigMaps(namespace).Get(name, metav1.GetOptions{})
+	cm, err := k.ClientSet.CoreV1().ConfigMaps(namespace).Get(context.TODO(), name, metav1.GetOptions{})
 
 	if err != nil {
 		return err
 	}
 	cm.Data = updatedMap
-	if _, err = k.ClientSet.CoreV1().ConfigMaps(namespace).Update(cm); err != nil {
+	if _, err = k.ClientSet.CoreV1().ConfigMaps(namespace).Update(context.TODO(), cm, metav1.UpdateOptions{}); err != nil {
 		return err
 	}
 
 	// Poll until the configmap update has been applied or we reach the timeout.
 	err = wait.PollImmediate(300*time.Millisecond, defaultWaitTime, func() (done bool, err error) {
-		cm, err = k.ClientSet.CoreV1().ConfigMaps(namespace).Get(name, metav1.GetOptions{})
+		cm, err = k.ClientSet.CoreV1().ConfigMaps(namespace).Get(context.TODO(), name, metav1.GetOptions{})
 		// stop polling if we get an error
 		if err != nil {
 			return true, err
@@ -407,28 +408,28 @@ func (k *K8s) isOldVersion(key string, fileName string, timeNow time.Time) bool 
 
 	keyTime, _ := time.Parse(Layout, strings.Replace(key, fileName+"-", "", 1))
 	diff := timeNow.Sub(keyTime)
-        hours := int(diff.Hours())
-        if hours >= MaxBackupHours {
+	hours := int(diff.Hours())
+	if hours >= MaxBackupHours {
 		return true
 	}
 	return false
 }
 
 func (k *K8s) updateSecretByName(updatedSecret map[string][]byte, name string) error {
-	secret, err := k.ClientSet.CoreV1().Secrets(namespace).Get(name, metav1.GetOptions{})
+	secret, err := k.ClientSet.CoreV1().Secrets(namespace).Get(context.TODO(), name, metav1.GetOptions{})
 
 	if err != nil {
 		return err
 	}
 
 	secret.Data = updatedSecret
-	if _, err = k.ClientSet.CoreV1().Secrets(namespace).Update(secret); err != nil {
+	if _, err = k.ClientSet.CoreV1().Secrets(namespace).Update(context.TODO(), secret, metav1.UpdateOptions{}); err != nil {
 		return err
 	}
 
 	// Poll until the secret update has been applied or we reach the timeout
 	err = wait.PollImmediate(300*time.Millisecond, defaultWaitTime, func() (done bool, err error) {
-		secret, err := k.ClientSet.CoreV1().Secrets(namespace).Get(name, metav1.GetOptions{})
+		secret, err := k.ClientSet.CoreV1().Secrets(namespace).Get(context.TODO(), name, metav1.GetOptions{})
 		// stop polling if we get an error
 		if err != nil {
 			return true, err
@@ -613,7 +614,7 @@ func (k *K8s) deleteFile(filePath string, podName string, containerName string) 
 func (k *K8s) getNodeIPs() ([]string, error) {
 
 	// Construct a map of node names => public IPs for easy lookup below
-	nodes, err := k.ClientSet.CoreV1().Nodes().List(metav1.ListOptions{})
+	nodes, err := k.ClientSet.CoreV1().Nodes().List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		log(LevelError, "Unable to list nodes: %v", err)
 		return []string{}, err
@@ -746,7 +747,7 @@ func (k *K8s) RestartPodsByLabel(label string, waitTime time.Duration, skipValid
 
 // getPodsByLabel returns a PodList that match the specified label.
 func (k *K8s) getPodsByLabel(label string) (*corev1.PodList, error) {
-	pods, err := k.ClientSet.CoreV1().Pods(namespace).List(metav1.ListOptions{LabelSelector: label})
+	pods, err := k.ClientSet.CoreV1().Pods(namespace).List(context.TODO(), metav1.ListOptions{LabelSelector: label})
 	if err != nil {
 		return nil, err
 	}
@@ -759,7 +760,7 @@ func (k *K8s) getPodsByLabel(label string) (*corev1.PodList, error) {
 func (k *K8s) getReadyPodsByLabel(label string, allContainersReady bool) (*corev1.PodList, error) {
 	log(LevelDebug, "Looking for ready pods with label %s", label)
 	var podsInPhase []corev1.Pod
-	podList, err := k.ClientSet.CoreV1().Pods(namespace).List(metav1.ListOptions{LabelSelector: label})
+	podList, err := k.ClientSet.CoreV1().Pods(namespace).List(context.TODO(), metav1.ListOptions{LabelSelector: label})
 	if err != nil {
 		return nil, err
 	}
@@ -799,7 +800,7 @@ func (k *K8s) getReadyPodsByLabel(label string, allContainersReady bool) (*corev
 func (k *K8s) deletePods(podList *corev1.PodList) error {
 	for _, pod := range podList.Items {
 		log(LevelInfo, "deleting pods %s in namespace %s\n", pod.Name, namespace)
-		if err := k.ClientSet.CoreV1().Pods(pod.Namespace).Delete(pod.Name, &metav1.DeleteOptions{}); err == nil {
+		if err := k.ClientSet.CoreV1().Pods(pod.Namespace).Delete(context.TODO(), pod.Name, metav1.DeleteOptions{}); err == nil {
 			return err
 		}
 	}
@@ -809,5 +810,5 @@ func (k *K8s) deletePods(podList *corev1.PodList) error {
 // deletePod deletes a single pod with a given name
 func (k *K8s) deletePod(podName string) error {
 	log(LevelInfo, "deletePod %s in namespace %s\n", podName, namespace)
-	return k.ClientSet.CoreV1().Pods(namespace).Delete(podName, &metav1.DeleteOptions{})
+	return k.ClientSet.CoreV1().Pods(namespace).Delete(context.TODO(), podName, metav1.DeleteOptions{})
 }
