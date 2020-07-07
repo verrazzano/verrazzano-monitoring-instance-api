@@ -43,7 +43,7 @@ func GetConfig() *restgo.Config {
 	cfg.GroupVersion = &s
 	cfg.APIPath = "/apis"
 	cfg.ContentType = runtime.ContentTypeJSON
-	cfg.NegotiatedSerializer = serializer.DirectCodecFactory{CodecFactory: serializer.NewCodecFactory(&runtime.Scheme{})}
+	cfg.NegotiatedSerializer = serializer.WithoutConversionCodecFactory{CodecFactory: serializer.NewCodecFactory(&runtime.Scheme{})}
 
 	// Initialize K8s client
 	if vmiName == "" {
