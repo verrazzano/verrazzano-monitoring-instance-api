@@ -8,8 +8,7 @@ import (
 	"net"
 	"os"
 	"strings"
-
-	"github.com/golang/glog"
+	"github.com/rs/zerolog"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
@@ -19,7 +18,11 @@ import (
 
 // GetConfig returns the config for the monitoring instance API
 func GetConfig() *restgo.Config {
-	log(debugLevel, "firing up at debug level: %d\n", debugLevel) // log at default debugLevel to ensure this line comes out
+	// create log for config
+	logger := zerolog.New(os.Stderr).With().Timestamp().Str("kind", "Config").Str("name", "GetConfig").Logger()
+
+	logger.Debug().Msgf("firing up at debug level: %d\n", debugLevel) // log at default debugLevel to ensure this line comes out
+
 	flag.StringVar(&ListenURL, "ListenURL", ":9097", "set Cirith listener URL, default :9097")
 	flag.StringVar(&promtoolPath, "promtoolPath", "/opt/tools/bin/promtool", "set path of promtool")
 	flag.StringVar(&staticPath, "staticPath", "/usr/local/bin/static", "set path to static assets (e.g. Swagger)")
@@ -39,7 +42,7 @@ func GetConfig() *restgo.Config {
 	//Initialize the CFG
 	cfg, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
 	if err != nil {
-		glog.Fatalf("error building config: %+v", err)
+		logger.Fatal().Msgf("error building config: %+v", err)
 	}
 	s := schema.GroupVersion{Group: VMIGroup, Version: VMIVersion}
 	cfg.GroupVersion = &s
@@ -51,7 +54,7 @@ func GetConfig() *restgo.Config {
 	if vmiName == "" {
 		vmiName = os.Getenv("VMI_NAME")
 		if vmiName == "" {
-			glog.Fatalf("No Verrazzano Monitoring Instance (VMI) name set")
+			logger.Fatal().Msg("No Verrazzano Monitoring Instance (VMI) name set")
 		}
 	}
 	if os.Getenv("NAMESPACE") != "" {
@@ -64,7 +67,7 @@ func GetConfig() *restgo.Config {
 		for _, ipString := range strings.Split(natGatewayIPsString, ",") {
 			ip := net.ParseIP(ipString)
 			if ip == nil {
-				glog.Fatalf("Invalid NAT Gateway IP: %s", ipString)
+				logger.Fatal().Msgf("Invalid NAT Gateway IP: %s", ipString)
 			}
 			natGatewayIPs = append(natGatewayIPs, ip)
 		}
@@ -72,7 +75,7 @@ func GetConfig() *restgo.Config {
 
 	cfg, err = clientcmd.BuildConfigFromFlags(masterURL, kubeconfig)
 	if err != nil {
-		glog.Fatalf("Error building kubeconfig: %s", err.Error())
+		logger.Fatal().Msgf("Error building kubeconfig: %s", err.Error())
 	}
 
 	if debugLevel < LevelMin {
@@ -85,13 +88,13 @@ func GetConfig() *restgo.Config {
 	if len(ociConfigFile) > 0 {
 		// If ociConfigFile flag is passed, it must point to an existing readable file
 		if _, err := os.Stat(ociConfigFile); err != nil {
-			glog.Fatalf("OCI config %s does not exist, or cannot be read: %+v", ociConfigFile, err)
+			logger.Fatal().Msgf("OCI config %s does not exist, or cannot be read: %+v", ociConfigFile, err)
 		}
 	}
 
-	log(LevelInfo, "command line arguments: %v", os.Args[1:])
+	logger.Info().Msgf("command line arguments: %v", os.Args[1:])
 
-	log(debugLevel, "Running at debug level: %d\n", debugLevel)
+	logger.Debug().Msgf("Running at debug level: %d\n", debugLevel)
 
 	return cfg
 }

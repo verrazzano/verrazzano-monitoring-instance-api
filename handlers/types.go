@@ -4,10 +4,11 @@
 package handlers
 
 import (
-	"github.com/golang/glog"
+	"github.com/rs/zerolog"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
+	"os"
 
 	k8sgo "k8s.io/client-go/kubernetes"
 	restgo "k8s.io/client-go/rest"
@@ -22,6 +23,8 @@ type K8s struct {
 
 // NewK8s returns a new K8s struct
 func NewK8s(cfg *restgo.Config) (*K8s, error) {
+	// create log for config
+	logger := zerolog.New(os.Stderr).With().Timestamp().Str("kind", "Config").Str("name", cfg.Host).Logger()
 
 	client := K8s{}
 
@@ -34,13 +37,13 @@ func NewK8s(cfg *restgo.Config) (*K8s, error) {
 
 	myRestClient, err := restgo.RESTClientFor(cfg)
 	if err != nil {
-		glog.Errorf("failure")
+		logger.Error().Msgf("failure, Error: %s", err.Error())
 	}
 	client.RestClient = myRestClient
 
 	client.ClientSet, err = k8sgo.NewForConfig(cfg)
 	if err != nil {
-		glog.Errorf("failure")
+		logger.Error().Msgf("failure, Error: %s", err.Error())
 	}
 	// config is needed later when building SPDY executor; save in client
 	client.Config = cfg
