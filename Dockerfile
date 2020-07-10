@@ -30,7 +30,7 @@ RUN curl -o /go/bin/swagger -L'#' https://github.com/go-swagger/go-swagger/relea
 RUN chmod +x /go/bin/swagger
 COPY . .
 
-# Copy amtool and promtool from official Saruon build images which are used in sauron-operator repo
+# Copy amtool and promtool from official Prometheus build images
 COPY --from=build_base_alertmanager /bin/amtool /opt/tools/bin/amtool
 COPY --from=build_base_prometheus /bin/promtool /opt/tools/bin/promtool
 
