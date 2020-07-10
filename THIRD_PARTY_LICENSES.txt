@@ -88,49 +88,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ======================= Dependencies Grouped by License ============
 -------- Dependency
-github.com/munnerz/goautoneg
--------- Copyrights
-Copyright (c) 2011, Open Knowledge Foundation Ltd.
-
-======== Dependencies Summary
-github.com/munnerz/goautoneg
-
-======== License used by Dependencies
-Copyright (c) 2011, Open Knowledge Foundation Ltd.
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are
-met:
-
-    Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-
-    Redistributions in binary form must reproduce the above copyright
-    notice, this list of conditions and the following disclaimer in
-    the documentation and/or other materials provided with the
-    distribution.
-
-    Neither the name of the Open Knowledge Foundation Ltd. nor the
-    names of its contributors may be used to endorse or promote
-    products derived from this software without specific prior written
-    permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-
-======================= Dependencies Grouped by License ============
--------- Dependency
 github.com/elazarl/goproxy
 -------- Copyrights
 Copyright (c) 2012 Elazar Leibovich. All rights reserved.
@@ -4724,6 +4681,17 @@ github.com/peterbourgon/diskv
 Copyright (c) 2011-2012 Peter Bourgon
 
 -------- Dependency
+github.com/rs/xid
+-------- Copyrights
+Copyright (c) 2015 Olivier Poitrey <rs@dailymotion.com>
+
+-------- Dependency
+github.com/rs/zerolog
+-------- Copyrights
+Copyright (c) 2017 Olivier Poitrey
+Copyright (c) 2014, 2015, 2016 Carl Jackson (carl@avtok.com)
+
+-------- Dependency
 github.com/sirupsen/logrus
 -------- Copyrights
 Copyright (c) 2014 Simon Eskildsen
@@ -4875,6 +4843,8 @@ github.com/onsi/ginkgo
 github.com/onsi/gomega
 github.com/pelletier/go-toml
 github.com/peterbourgon/diskv
+github.com/rs/xid
+github.com/rs/zerolog
 github.com/sirupsen/logrus
 github.com/spf13/cast
 github.com/spf13/jwalterweatherman
@@ -5114,4 +5084,4 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 ATTRIBUTION-HELPER-GENERATED:
-License file based on go.mod with md5 sum: a7451b6700e8a3617db5c4772ae2d0ec
+License file based on go.mod with md5 sum: e3799eba4679fa444164d16b42e41fa5
