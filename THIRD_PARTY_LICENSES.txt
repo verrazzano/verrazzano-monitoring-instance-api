@@ -89,48 +89,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ======================= Dependencies Grouped by License ============
 -------- Dependency
-github.com/russross/blackfriday/v2
--------- Copyrights
-> Copyright © 2011 Russ Ross
-// Copyright © 2011 Russ Ross <russ@russross.com>.
-
-======== Dependencies Summary
-github.com/russross/blackfriday/v2
-
-======== License used by Dependencies
-Blackfriday is distributed under the Simplified BSD License:
-
-> Copyright © 2011 Russ Ross
-> All rights reserved.
->
-> Redistribution and use in source and binary forms, with or without
-> modification, are permitted provided that the following conditions
-> are met:
->
-> 1.  Redistributions of source code must retain the above copyright
->     notice, this list of conditions and the following disclaimer.
->
-> 2.  Redistributions in binary form must reproduce the above
->     copyright notice, this list of conditions and the following
->     disclaimer in the documentation and/or other materials provided with
->     the distribution.
->
-> THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-> "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-> LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-> FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
-> COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-> INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-> BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-> LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-> CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-> LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
-> ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-> POSSIBILITY OF SUCH DAMAGE.
-
-
-======================= Dependencies Grouped by License ============
--------- Dependency
 github.com/elazarl/goproxy
 -------- Copyrights
 Copyright (c) 2012 Elazar Leibovich. All rights reserved.
@@ -521,31 +479,6 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-
-======================= Dependencies Grouped by License ============
--------- Dependency
-github.com/inconshreveable/mousetrap
--------- Copyrights
-Copyright 2014 Alan Shreve
-
-======== Dependencies Summary
-github.com/inconshreveable/mousetrap
-
-======== License used by Dependencies
-Copyright 2014 Alan Shreve
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-   http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 
 
 ======================= Dependencies Grouped by License ============
@@ -2174,18 +2107,6 @@ github.com/spf13/afero
 // Portions Copyright 2016-present Bjørn Erik Pedersen <bjorn.erik.pedersen@gmail.com>
 
 -------- Dependency
-github.com/spf13/cobra
--------- Copyrights
-// Copyright © 2015 Steve Francia <spf@spf13.com>.
- Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>
-11 of the WIPO copyright treaty adopted on 20 December 1996, or
- Copyright (C) 1989, 1991 Free Software Foundation, Inc.,
-// Copyright © 2013 Steve Francia <spf@spf13.com>.
-// Copyright 2015 Red Hat Inc. All rights reserved.
-//Copyright 2015 Red Hat Inc. All rights reserved.
-// Copyright 2016 French Ben. All rights reserved.
-
--------- Dependency
 go.mongodb.org/mongo-driver
 -------- Copyrights
 Copyright (c) 2010-2013 - Gustavo Niemeyer <gustavo@niemeyer.net>
@@ -3759,7 +3680,6 @@ github.com/prometheus/procfs
 github.com/prometheus/tsdb
 github.com/soheilhy/cmux
 github.com/spf13/afero
-github.com/spf13/cobra
 go.mongodb.org/mongo-driver
 go.opencensus.io
 google.golang.org/appengine
@@ -4057,12 +3977,6 @@ Copyright (c) 2012-2018 The Gorilla Authors. All rights reserved.
 // Copyright 2012 The Gorilla Authors. All rights reserved.
 // Copyright 2011 Gorilla Authors. All rights reserved.
 // Copyright 2009 The Go Authors. All rights reserved.
-
--------- Dependency
-github.com/ianlancetaylor/demangle
--------- Copyrights
-Copyright (c) 2015 The Go Authors. All rights reserved.
-// Copyright 2015 The Go Authors. All rights reserved.
 
 -------- Dependency
 github.com/imdario/mergo
@@ -4518,7 +4432,6 @@ github.com/google/go-cmp
 github.com/google/uuid
 github.com/googleapis/gax-go/v2
 github.com/gorilla/mux
-github.com/ianlancetaylor/demangle
 github.com/imdario/mergo
 github.com/jessevdk/go-flags
 github.com/pborman/uuid
@@ -4627,14 +4540,6 @@ github.com/cespare/xxhash
 Copyright (c) 2016 Caleb Spare
 
 -------- Dependency
-github.com/chzyer/readline
--------- Copyrights
-Copyright (c) 2015 Chzyer
-//  Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
-// Copyright 2011 The Go Authors. All rights reserved.
-// Copyright 2013 The Go Authors. All rights reserved.
-
--------- Dependency
 github.com/client9/misspell
 -------- Copyrights
 Copyright (c) 2015-2017 Nick Galbreath
@@ -4645,11 +4550,6 @@ Copyright (c) 2009 The Go Authors. All rights reserved.
 github.com/coreos/bbolt
 -------- Copyrights
 Copyright (c) 2013 Ben Johnson
-
--------- Dependency
-github.com/cpuguy83/go-md2man/v2
--------- Copyrights
-Copyright (c) 2014 Brian Goff
 
 -------- Dependency
 github.com/dgrijalva/jwt-go
@@ -4755,11 +4655,6 @@ github.com/mailru/easyjson
 Copyright (c) 2016 Mail.Ru Group
 
 -------- Dependency
-github.com/mitchellh/go-homedir
--------- Copyrights
-Copyright (c) 2013 Mitchell Hashimoto
-
--------- Dependency
 github.com/mitchellh/mapstructure
 -------- Copyrights
 Copyright (c) 2013 Mitchell Hashimoto
@@ -4785,11 +4680,6 @@ Copyright (c) 2013 - 2017 Thomas Pelletier, Eric Anderton
 github.com/peterbourgon/diskv
 -------- Copyrights
 Copyright (c) 2011-2012 Peter Bourgon
-
--------- Dependency
-github.com/shurcooL/sanitized_anchor_name
--------- Copyrights
-Copyright (c) 2015 Dmitri Shuralyov
 
 -------- Dependency
 github.com/sirupsen/logrus
@@ -4919,10 +4809,8 @@ github.com/alecthomas/units
 github.com/asaskevich/govalidator
 github.com/beorn7/perks
 github.com/cespare/xxhash
-github.com/chzyer/readline
 github.com/client9/misspell
 github.com/coreos/bbolt
-github.com/cpuguy83/go-md2man/v2
 github.com/dgrijalva/jwt-go
 github.com/emicklei/go-restful
 github.com/go-kit/kit
@@ -4940,13 +4828,11 @@ github.com/kr/pretty
 github.com/kr/pty
 github.com/kr/text
 github.com/mailru/easyjson
-github.com/mitchellh/go-homedir
 github.com/mitchellh/mapstructure
 github.com/onsi/ginkgo
 github.com/onsi/gomega
 github.com/pelletier/go-toml
 github.com/peterbourgon/diskv
-github.com/shurcooL/sanitized_anchor_name
 github.com/sirupsen/logrus
 github.com/spf13/cast
 github.com/spf13/jwalterweatherman
@@ -5186,4 +5072,4 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 ATTRIBUTION-HELPER-GENERATED:
-License file based on go.mod with md5 sum: 6582862bc24744aa0e6e4534a76f2918
+License file based on go.mod with md5 sum: 2d37c3fd87bc990d0d2ad343d24e07cc
