@@ -1,11 +1,8 @@
 # Copyright (C) 2020, Oracle and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
-# Provide amtool binary from the alertmanager image
-FROM prom/alertmanager:v0.16.0 AS build_base_alertmanager
-
 # Provide promtool binary from the prometheus image 
-FROM prom/prometheus:v2.12.0 AS build_base_prometheus
+FROM container-registry.oracle.com/olcne/prometheus:v2.13.1 AS build_base_prometheus
 
 FROM container-registry.oracle.com/os/oraclelinux:7-slim AS build_base
 
@@ -30,8 +27,7 @@ RUN curl -o /go/bin/swagger -L'#' https://github.com/go-swagger/go-swagger/relea
 RUN chmod +x /go/bin/swagger
 COPY . .
 
-# Copy amtool and promtool from official Prometheus build images
-COPY --from=build_base_alertmanager /bin/amtool /opt/tools/bin/amtool
+# Copy promtool from Prometheus build images
 COPY --from=build_base_prometheus /bin/promtool /opt/tools/bin/promtool
 
 ENV CGO_ENABLED 0
@@ -50,8 +46,7 @@ RUN groupadd -r cirith && useradd --no-log-init -r -g cirith -u 1000 cirith
 COPY --from=build_base /go/src/github.com/verrazzano/verrazzano-monitoring-instance-api/static /usr/local/bin/static
 COPY --from=build_base /usr/bin/cirith /usr/local/bin/cirith
 
-# Copy amtool and promtool from base stage build context
-COPY --from=build_base /opt/tools/bin/amtool /opt/tools/bin/amtool
+# Copy promtool from base stage build context
 COPY --from=build_base /opt/tools/bin/promtool /opt/tools/bin/promtool
 
 # Set perms as tight as possible

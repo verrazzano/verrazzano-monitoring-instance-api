@@ -49,7 +49,7 @@ make integ-test
 ```
 
 ### Notes On Running Tests locally
-* Unit tests require installing amtool & promtool in /opt/tools/bin  
+* Unit tests require installing promtool in /opt/tools/bin  
    
 ## Regenerate the swagger docs
 If you made any change to the API and need the swagger docs to be regenerated:

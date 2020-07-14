@@ -28,55 +28,6 @@ func (k *K8s) NewRouter(config *restgo.Config) *mux.Router {
 
 	router.HandleFunc("/healthcheck", GetHealthCheck).Methods("GET")
 
-	// swagger:operation GET /alertmanager/config getAlertmanagerConfig
-	// ---
-	// tags:
-	// - "Alertmanager Config"
-	// summary: Display the contents of a Alertmanager configuration file
-	// description: Display the contents of the current Alertmanager configuration file.  If a version parameter is provided, display the contents of that older version.
-	// parameters:
-	// - in: query
-	//   name: version
-	//   description: Timestamp of older file version
-	//   required: false
-	//   schema:
-	//     type: string
-	// responses:
-	//   "200":
-	//     description: Display the contents of a Alertmanager config file
-	router.HandleFunc("/alertmanager/config", k.GetAlertmanagerConfig).Methods("GET")
-
-	// swagger:operation PUT /alertmanager/config putAlertmanagerConfig
-	// ---
-	// tags:
-	// - "Alertmanager Config"
-	// summary: Replace the contents of the Alertmanager configuration file
-	// description: The user-provided content will replace the current Alertmanager configuration. The older configuration is saved to a file.
-	// consumes:
-	// - application/x-yaml
-	// parameters:
-	// - in: body
-	//   name: body
-	//   description: New contents of the Alertmanager config file
-	//   required: true
-	//   schema:
-	//     type: string
-	// responses:
-	//   "200":
-	//     description: Replace contents of Alertmanager config file
-	router.HandleFunc("/alertmanager/config", k.PutAlertmanagerConfig).Methods("PUT")
-
-	// swagger:operation GET /alertmanager/config/versions getAlertmanagerConfigVersions
-	// ---
-	// tags:
-	// - "Alertmanager Config"
-	// summary: Display a list of all older saved versions.
-	// description: Display a list of all saved versions of the Alertmanager configuration.
-	// responses:
-	//   "200":
-	//     description: Display a list of all older saved versions of the Alertmanager configuration.
-	router.HandleFunc("/alertmanager/config/versions", k.GetAlertmanagerVersions).Methods("GET")
-	
 	// swagger:operation GET /prometheus/config getPrometheusConfig
 	// ---
 	// tags:

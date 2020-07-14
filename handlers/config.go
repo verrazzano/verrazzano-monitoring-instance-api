@@ -19,7 +19,6 @@ func GetConfig() *restgo.Config {
 	log(debugLevel, "firing up at debug level: %d\n", debugLevel) // log at default debugLevel to ensure this line comes out
 	flag.StringVar(&ListenURL, "ListenURL", ":9097", "set Cirith listener URL, default :9097")
 	flag.StringVar(&promtoolPath, "promtoolPath", "/opt/tools/bin/promtool", "set path of promtool")
-	flag.StringVar(&amtoolPath, "amtoolPath", "/opt/tools/bin/amtool", "set path of amtool")
 	flag.StringVar(&staticPath, "staticPath", "/usr/local/bin/static", "set path to static assets (e.g. Swagger)")
 	flag.IntVar(&debugLevel, "debugLevel", LevelInfo, "debug level, 1 for most, 3 for least, 2 default."+
 		"Setting a level lower than the default is not recommended in production.")

@@ -6,7 +6,6 @@ import "net"
 
 // These can be set from the command line via e.g. -promRulesFile <promRulesFilePath>
 var ListenURL string
-var amtoolPath string
 var promtoolPath string
 var staticPath string
 var debugLevel = LevelInfo
