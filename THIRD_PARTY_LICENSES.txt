@@ -1,9 +1,10 @@
 github.com/verrazzano/verrazzano-monitoring-instance-api
 -------- Copyrights
 Copyright (c) 2020 Oracle America, Inc. and its affiliates. 
-# Copyright (C) 2020, Oracle Corporation and/or its affiliates.
-// Copyright (C) 2020, Oracle Corporation and/or its affiliates.
+# Copyright (C) 2020, Oracle and/or its affiliates.
+// Copyright (C) 2020, Oracle and/or its affiliates.
 Copyright 2019 The Kubernetes Authors.
+# Copyright (c) 2020, Oracle and/or its affiliates.
 
 ======== License
 Copyright (c) 2020 Oracle America, Inc. and its affiliates. 
@@ -5071,4 +5072,4 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 ATTRIBUTION-HELPER-GENERATED:
-License file based on go.mod with md5 sum: 8869a65ea85ec886af585bddd46d04c8
+License file based on go.mod with md5 sum: 2d37c3fd87bc990d0d2ad343d24e07cc
