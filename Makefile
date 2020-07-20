@@ -93,10 +93,6 @@ push-tag:
 unit-test:
 	export GO111MODULE=on; $(GO) test -v ./handlers/...
 
-.PHONY: thirdparty-check
-thirdparty-check:
-	./build/scripts/thirdparty_check.sh
-
 .PHONY: go-generate
 go-generate:
 	export GO111MODULE=on; $(GO) get github.com/go-swagger/go-swagger/cmd/swagger@v0.21.0;
