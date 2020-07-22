@@ -4,7 +4,7 @@
 # Provide promtool binary from the prometheus image 
 FROM container-registry.oracle.com/olcne/prometheus:v2.13.1 AS build_base_prometheus
 
-FROM container-registry.oracle.com/os/oraclelinux:7-slim AS build_base
+FROM container-registry.oracle.com/os/oraclelinux:7-slim@sha256:9b86d1332a883ee8f68dd44ba42133de518b2e0ec1cc70257e59fb4da86b1ad3 AS build_base
 
 RUN yum update -y \
     && yum-config-manager --save --setopt=ol7_ociyum_config.skip_if_unavailable=true \
@@ -37,7 +37,7 @@ RUN go build -o /usr/bin/cirith cmd/cirith/main.go
 ENV GOROOT /usr/lib/golang
 RUN /go/bin/swagger generate spec -o ./static/cirith.json ./...
 
-FROM container-registry.oracle.com/os/oraclelinux:7-slim AS final
+FROM container-registry.oracle.com/os/oraclelinux:7-slim@sha256:9b86d1332a883ee8f68dd44ba42133de518b2e0ec1cc70257e59fb4da86b1ad3 AS final
 
 # Add cirith user/group
 RUN groupadd -r cirith && useradd --no-log-init -r -g cirith -u 1000 cirith
