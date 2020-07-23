@@ -6,3 +6,6 @@ vendor
 **/*.iml
 dist/**
 static/**
+known_licenses.txt
+no_licenses.txt
+thirdparty_licenses
