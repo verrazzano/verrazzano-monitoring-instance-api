@@ -56,10 +56,7 @@ pipeline {
         stage('Third Party License Check') {
             when { not { buildingTag() } }
             steps {
-                sh """
-                    cd ${GO_REPO_PATH}/verrazzano-monitoring-instance-api
-                    make thirdparty-check
-                """
+                thirdpartyCheck()
             }
         }
 
