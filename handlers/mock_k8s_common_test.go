@@ -3,6 +3,8 @@
 package handlers
 
 import (
+	"crypto/rand"
+	"encoding/base64"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -40,7 +42,7 @@ func newRestClient(testServer *httptest.Server) (*restclient.RESTClient, error) 
 			NegotiatedSerializer: serializer.WithoutConversionCodecFactory{CodecFactory: scheme.Codecs},
 		},
 		Username: "user",
-		Password: "pass",
+		Password: generateRandomString(),
 	})
 
 	return c, err
@@ -127,4 +129,11 @@ func createK8sTestNodes(externalIPs []string, privateWorker bool) (nodes *v1.Nod
 	}
 
 	return nodes
+}
+
+// generateRandomString returns a base64 encoded generated random string.
+func generateRandomString() string {
+	b := make([]byte, 32)
+	rand.Read(b)
+	return base64.StdEncoding.EncodeToString(b)
 }
