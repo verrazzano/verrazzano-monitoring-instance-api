@@ -51,14 +51,6 @@ make integ-test
 ### Notes On Running Tests locally
 * Unit tests require installing promtool in /opt/tools/bin  
    
-## Regenerate the swagger docs
-If you made any change to the API and need the swagger docs to be regenerated:
-* Please make sure you have updated the documentation metadata at `cmd/cirith/main.go`  
-* Run `make go-generate`  
-* You will notice that `/static/cirith.json` is updated   
-* Run `make go-run` to validate your changes  
-* __Note__ : You would need to invalidate your browser cache or use a incognito tab to se the updates  
-
 ## Contributing to Verrazzano
 
 Oracle welcomes contributions to this project from anyone.  Contributions may be reporting an issue with the operator or submitting a pull request.  Before embarking on significant development that may result in a large pull request, it is recommended that you create an issue and discuss the proposed changes with the existing developers first.
