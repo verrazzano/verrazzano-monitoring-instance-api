@@ -1,5 +1,6 @@
 // Copyright (C) 2020, Oracle and/or its affiliates.
 // Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
+
 package handlers
 
 import (
@@ -33,21 +34,35 @@ import (
 	"k8s.io/apimachinery/pkg/util/wait"
 )
 
-const LevelMin = LevelAll
+// LevelAll is all log level.
 const LevelAll = 0
+
+// LevelDebug is debug log level.
 const LevelDebug = 1
+
+// LevelInfo is info log level.
 const LevelInfo = 2
+
+// LevelError is error log level.
 const LevelError = 3
+
+// LevelFatal is fatal log level.
 const LevelFatal = 4
+
+// LevelMin is minimum log level.
+const LevelMin = LevelAll
+
+// LevelMax is maximum log level.
 const LevelMax = LevelFatal
+
 const defaultWaitTime = 10 * time.Second
 
 var (
 	levelNames               = [...]string{"FINEST", "DEBUG", "INFO", "ERROR", "FATAL"}
-	ErrCanaryWithInvalidName = errors.New("Error: Canary with invalid Name ")
+	errCanaryWithInvalidName = errors.New("Error: Canary with invalid Name ")
 )
 
-// The schedule used for endpoint polling
+// EndpointBackoffSchedule is the schedule used for endpoint polling.
 var EndpointBackoffSchedule = wait.Backoff{
 	Steps:    10,
 	Duration: 3 * time.Second,
@@ -287,17 +302,17 @@ func (k *K8s) modifyStorageCapacity(component string, factor float32) (string, e
 	return newSize.String(), nil
 }
 
-// Retrieves the current Verrazzano Monitoring Instance (VMI) from k8s as a JSON entity
+// getVMIJson retrieves the current Verrazzano Monitoring Instance (VMI) from k8s as a JSON entity
 func (k *K8s) getVMIJson() (*gabs.Container, error) {
 	result, err := k.RestClient.Get().Resource(VMIPlural).Namespace(namespace).Name(vmiName).Do(context.TODO()).Raw()
 	if err != nil {
 		return nil, err
 	}
-	vmiJson, err := gabs.ParseJSON(result)
+	vmiJSON, err := gabs.ParseJSON(result)
 	if err != nil {
 		return nil, err
 	}
-	return vmiJson, nil
+	return vmiJSON, nil
 }
 
 // Updates the given Verrazzano Monitoring Instance (VMI) (specified as a JSON entity) in k8s
@@ -374,7 +389,7 @@ func (k *K8s) updateConfigMapByName(updatedMap map[string]string, name string) e
 
 	if err != nil {
 		if err == wait.ErrWaitTimeout {
-			return errors.New(fmt.Sprintf("verification of the updated configuration timed out %v", defaultWaitTime))
+			return fmt.Errorf("verification of the updated configuration timed out %v", defaultWaitTime)
 		}
 		return err
 	}
@@ -446,7 +461,7 @@ func (k *K8s) updateSecretByName(updatedSecret map[string][]byte, name string) e
 
 	if err != nil {
 		if err == wait.ErrWaitTimeout {
-			return errors.New(fmt.Sprintf("verification of the updated secret timed out %v", defaultWaitTime))
+			return fmt.Errorf("verification of the updated secret timed out %v", defaultWaitTime)
 		}
 		return err
 	}
@@ -461,9 +476,10 @@ func validateName(proposedName string) error {
 	if err == nil && match {
 		return nil
 	}
-	return ErrCanaryWithInvalidName
+	return errCanaryWithInvalidName
 }
 
+// Usage returns the usage for the API.
 func Usage(w http.ResponseWriter, _ *http.Request) {
 	fmt.Fprintln(w, "API server for \"VMI\" ! <a href=\"https://github.com/verrazzano/verrazzano-monitoring-instance-api/blob/master/README.md\">README</a>")
 }
@@ -471,6 +487,7 @@ func Usage(w http.ResponseWriter, _ *http.Request) {
 // See <https://kubernetes.io/docs/concepts/overview/working-with-objects/names/> for details
 var configMapKeyNameRegex = regexp.MustCompile("^[-._a-zA-Z0-9]+$")
 
+// ValidateConfigMapKeyName validates a given configmap key.
 func ValidateConfigMapKeyName(keyName string) error {
 	if len(keyName) == 0 || len(keyName) > 253 {
 		return errors.New("ConfigMap key names must be between 1 and 253 characters long")
@@ -685,7 +702,7 @@ func sendRequest(action, myURL, host string, headers map[string]string, payload 
 	return resp, string(body), err
 }
 
-// WaitForEndpointAvailable:  Waits for the given endpoint to become available
+// WaitForEndpointAvailable waits for the given endpoint to become available.
 func WaitForEndpointAvailable(action, myURL, host string, headers map[string]string, payload string, reqUserName string, reqPassword string) error {
 	var err error
 	expectedStatusCode := http.StatusOK
@@ -769,7 +786,7 @@ func (k *K8s) getReadyPodsByLabel(label string, allContainersReady bool) (*corev
 			log(LevelDebug, "pod %s is running", podList.Items[i].Name)
 			containersReady := true
 			if allContainersReady {
-				for j, _ := range podList.Items[i].Spec.Containers {
+				for j := range podList.Items[i].Spec.Containers {
 					if !podList.Items[i].Status.ContainerStatuses[j].Ready {
 						log(LevelDebug, "not accepting pod %s since container %d is NOT ready", podList.Items[i].Name, j)
 						containersReady = false

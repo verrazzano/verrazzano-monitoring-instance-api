@@ -1,15 +1,17 @@
 // Copyright (C) 2020, Oracle and/or its affiliates.
 // Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
+
 package handlers
 
 import (
 	"fmt"
-	"github.com/Jeffail/gabs/v2"
-	k8sfake "k8s.io/client-go/kubernetes/fake"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/Jeffail/gabs/v2"
+	k8sfake "k8s.io/client-go/kubernetes/fake"
 )
 
 func TestCreateUpdateDeleteAlertmanagerTemplates(t *testing.T) {

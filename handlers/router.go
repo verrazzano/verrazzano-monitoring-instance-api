@@ -1,20 +1,21 @@
 // Copyright (C) 2020, Oracle and/or its affiliates.
 // Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
+
 package handlers
 
 import (
+	"net/http"
+
 	"github.com/gorilla/mux"
 	restgo "k8s.io/client-go/rest"
-	"net/http"
 )
 
-// Verrazzano Monitoring Instance Cirith Server Swagger
 var permanentRedirects = map[string]string{
-	"/prometheus/resize/halve":     "/v1",
-	"/prometheus/resize/double":    "/v1",
+	"/prometheus/resize/halve":  "/v1",
+	"/prometheus/resize/double": "/v1",
 }
 
-// Verrazzano Monitoring Instance Cirith Server Swagger
+// NewRouter returns a new router instance.
 func (k *K8s) NewRouter(config *restgo.Config) *mux.Router {
 
 	router := mux.NewRouter().StrictSlash(true)

@@ -1,20 +1,23 @@
 // Copyright (C) 2020, Oracle and/or its affiliates.
 // Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
+
 package handlers
 
 import (
 	"flag"
+	"net"
+	"os"
+	"strings"
+
 	"github.com/golang/glog"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
 	restgo "k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
-	"os"
-	"strings"
-	"net"
 )
 
+// GetConfig returns the config for the monitoring instance API
 func GetConfig() *restgo.Config {
 	log(debugLevel, "firing up at debug level: %d\n", debugLevel) // log at default debugLevel to ensure this line comes out
 	flag.StringVar(&ListenURL, "ListenURL", ":9097", "set Cirith listener URL, default :9097")

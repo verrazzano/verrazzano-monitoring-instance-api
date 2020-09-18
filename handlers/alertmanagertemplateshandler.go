@@ -1,9 +1,9 @@
 // Copyright (C) 2020, Oracle and/or its affiliates.
 // Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
+
 package handlers
 
 import (
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -12,10 +12,7 @@ import (
 	"strings"
 )
 
-var (
-	AlertmanagerTemplateEmptyFile = errors.New("Error: Invalid Template, It is empty")
-)
-
+// GetAllAlertmanagerTemplatesFileNames returns all Alert Manager template files.
 func (k *K8s) GetAllAlertmanagerTemplatesFileNames(w http.ResponseWriter, r *http.Request) {
 
 	_, configMap, err := k.getConfigMapByPath(AlertmanagerTemplatesConfigMapPath)
@@ -34,6 +31,7 @@ func (k *K8s) GetAllAlertmanagerTemplatesFileNames(w http.ResponseWriter, r *htt
 	success(w, strings.Join(templateNames, "\n"))
 }
 
+// GetAlertmanagerTemplate returns a requested Alert Manager template file.
 func (k *K8s) GetAlertmanagerTemplate(w http.ResponseWriter, r *http.Request) {
 	fileName := path.Base(r.URL.Path)
 	err := validateName(fileName)
@@ -64,6 +62,7 @@ func (k *K8s) GetAlertmanagerTemplate(w http.ResponseWriter, r *http.Request) {
 	badRequest(w, "Did not find any template with name: "+amTemplateMapName+", "+fileName)
 }
 
+// DeleteAlertmanagerTemplate deletes a requested Alert Manager template file.
 func (k *K8s) DeleteAlertmanagerTemplate(w http.ResponseWriter, r *http.Request) {
 	fileName := path.Base(r.URL.Path)
 	err := validateName(fileName)
@@ -100,6 +99,7 @@ func (k *K8s) DeleteAlertmanagerTemplate(w http.ResponseWriter, r *http.Request)
 	badRequest(w, "Did not find any template to delete with name: "+fileName)
 }
 
+// PutAlertmanagerTemplate adds a requested Alert Manager template file.
 func (k *K8s) PutAlertmanagerTemplate(w http.ResponseWriter, r *http.Request) {
 	b, e := ioutil.ReadAll(r.Body)
 	if e != nil {
