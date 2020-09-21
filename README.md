@@ -1,5 +1,6 @@
-# API server for Verrazzano Monitoring Instance
+[![Go Report Card](https://goreportcard.com/badge/github.com/verrazzano/verrazzano-monitoring-instance-api)](https://goreportcard.com/report/github.com/verrazzano/verrazzano-monitoring-instance-api)
 
+# API server for Verrazzano Monitoring Instance
 
 ## Overview
 

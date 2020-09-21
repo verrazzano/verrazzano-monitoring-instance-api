@@ -92,6 +92,9 @@ scrape_configs:
 	// Verify we get three versions files back
 	var versionsMap map[string][]string
 	err = json.Unmarshal([]byte(rr.Body.String()), &versionsMap)
+	if err != nil {
+		t.Fatal(err)
+	}
 	if len(versionsMap["versions"]) != 3 {
 		t.Errorf("handler returned an unexpected number of versions: expected 3. Output: %v", versionsMap["versions"])
 	}
@@ -152,6 +155,9 @@ scrape_configs:
 
 	// Verify we get four version files back
 	err = json.Unmarshal([]byte(rr.Body.String()), &versionsMap)
+	if err != nil {
+		t.Fatal(err)
+	}
 	if len(versionsMap["versions"]) != 4 {
 		t.Errorf("handler returned an unexpected number of versions: expected 3. Output: %v", versionsMap["versions"])
 	}

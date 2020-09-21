@@ -1,5 +1,6 @@
 // Copyright (C) 2020, Oracle and/or its affiliates.
 // Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
+
 package handlers
 
 import (
@@ -23,12 +24,12 @@ import (
 const unnamedRules = "unnamed.rules"
 
 var (
-	PrometheusRuleEmptyFile                     = errors.New("Error: Invalid Rule, It is empty")
-	PrometheusRuleRootElementGroupsNotDefined   = errors.New("Error: Invalid Rule, does not have root element groups: defined")
-	PrometheusRuleDoesNotHaveSingleGroupDefined = errors.New("Error: Invalid Rule, Does not have even a single rule group defined")
+	errPrometheusRuleEmptyFile                     = errors.New("Error: Invalid Rule, It is empty")
+	errPrometheusRuleRootElementGroupsNotDefined   = errors.New("Error: Invalid Rule, does not have root element groups: defined")
+	errPrometheusRuleDoesNotHaveSingleGroupDefined = errors.New("Error: Invalid Rule, Does not have even a single rule group defined")
 )
 
-// Return a JSON with names of all current Prometheus rules files
+// GetPrometheusRuleNames returns a JSON with names of all current Prometheus rules files.
 func (k *K8s) GetPrometheusRuleNames(w http.ResponseWriter, r *http.Request) {
 
 	var result []byte
@@ -61,8 +62,8 @@ func (k *K8s) GetPrometheusRuleNames(w http.ResponseWriter, r *http.Request) {
 	successBytes(w, result)
 }
 
-// Take the user-provided rule file name and return a JSON with all available
-// versions of that file.
+// GetPrometheusRuleVersions takes the user-provided rule file name and
+// returns a JSON with all available versions of that file.
 func (k *K8s) GetPrometheusRuleVersions(w http.ResponseWriter, r *http.Request) {
 
 	var result []byte
@@ -131,7 +132,7 @@ func (k *K8s) GetPrometheusRuleVersions(w http.ResponseWriter, r *http.Request) 
 	successBytes(w, result)
 }
 
-// Return the contents of the requested Alert Rules file
+// GetPrometheusRules returns the contents of the requested Alert Rules file.
 // All rules files must end in suffix ".rules" so we can differentiate requests for current vs. saved versions.
 func (k *K8s) GetPrometheusRules(w http.ResponseWriter, r *http.Request) {
 
@@ -215,7 +216,7 @@ func (k *K8s) GetPrometheusRules(w http.ResponseWriter, r *http.Request) {
 	notFoundError(w, error)
 }
 
-// Removed the requested current Alert Rules file.
+// DeletePrometheusRules removes the requested current Alert Rules file.
 // If the optional flag is included, delete all the rules saved backups too.
 func (k *K8s) DeletePrometheusRules(w http.ResponseWriter, r *http.Request) {
 
@@ -286,12 +287,12 @@ func (k *K8s) DeletePrometheusRules(w http.ResponseWriter, r *http.Request) {
 	notFoundError(w, "No action taken. Unable to find a current alert rule called: "+fileName)
 }
 
-// PUT /prometheus/rules has been deprecated.  Return a friendly error message instead.
+// PutPrometheusUnnamedRules PUT /prometheus/rules has been deprecated.  Return a friendly error message instead.
 func (k *K8s) PutPrometheusUnnamedRules(w http.ResponseWriter, r *http.Request) {
 	badRequest(w, fmt.Sprintf("ERROR:  This endpoint has been deprecated in Cirith v1.\nPlease use:  PUT /prometheus/rules/%s", unnamedRules))
 }
 
-// Update the requested Alert Rules file with the provided body.
+// PutPrometheusRules updates the requested Alert Rules file with the provided body.
 // If not a new rule, save a backup copy of the current rule.
 func (k *K8s) PutPrometheusRules(w http.ResponseWriter, r *http.Request) {
 	b, e := ioutil.ReadAll(r.Body)
@@ -379,22 +380,22 @@ func (k *K8s) PutPrometheusRules(w http.ResponseWriter, r *http.Request) {
 			keyName := fileName + "-" + timeNow.Format(Layout)
 			savedConfigMap[keyName] = currentConfigMap[fileName]
 
-        		// How many backups do we have?  Do we need to delete any old ones?
-        		// K8S configmaps have limited space; very large configs can fill the versions configMap.
-        		keyList := k.sortKeysFromConfigMap(savedConfigMap, fileName)
-        		if len(keyList) > MaxBackupFiles {
-                		for j := range keyList {
+			// How many backups do we have?  Do we need to delete any old ones?
+			// K8S configmaps have limited space; very large configs can fill the versions configMap.
+			keyList := k.sortKeysFromConfigMap(savedConfigMap, fileName)
+			if len(keyList) > MaxBackupFiles {
+				for j := range keyList {
 
-                        		// We want to keep at least MaxBackupFiles...
-                        		if j < MaxBackupFiles {
-                                		continue
-                        		}
+					// We want to keep at least MaxBackupFiles...
+					if j < MaxBackupFiles {
+						continue
+					}
 					// Delete any backups that are MaxBackupHours or older.
 					if k.isOldVersion(keyList[j], fileName, timeNow) {
 						delete(savedConfigMap, keyList[j])
 					}
-                		}
-        		}
+				}
+			}
 
 			// Okay, we're done messing with the savedConfigMap... Save it
 			e = k.updateConfigMapByName(savedConfigMap, savedConfigMapName)
@@ -437,22 +438,22 @@ func (k *K8s) PutPrometheusRules(w http.ResponseWriter, r *http.Request) {
 	accepted(w, "A new rule file: "+fileName+" is being created.")
 }
 
-// Do some basic validation on the rule file
+// ValidatePrometheusRuleElements does some basic validation on the rule file.
 func ValidatePrometheusRuleElements(g *gabs.Container) (bool, error) {
 	var ruleTopElement = "groups"
 
 	if g.String() == "{}" {
-		return false, PrometheusRuleEmptyFile
+		return false, errPrometheusRuleEmptyFile
 	}
 
 	if !g.ExistsP(ruleTopElement) {
-		return false, PrometheusRuleRootElementGroupsNotDefined
+		return false, errPrometheusRuleRootElementGroupsNotDefined
 	}
 
 	_, e := g.ArrayCountP(ruleTopElement)
 	if e != nil {
 		log(LevelError, "%s", "Did not find any rules group: "+e.Error())
-		return false, PrometheusRuleDoesNotHaveSingleGroupDefined
+		return false, errPrometheusRuleDoesNotHaveSingleGroupDefined
 	}
 
 	log(LevelDebug, "%s", "Prometheus Rule: "+g.String())

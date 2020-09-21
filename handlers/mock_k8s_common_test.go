@@ -1,5 +1,6 @@
 // Copyright (C) 2020, Oracle and/or its affiliates.
 // Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
+
 package handlers
 
 import (
@@ -116,7 +117,7 @@ func createK8sTestNodes(externalIPs []string, privateWorker bool) (nodes *v1.Nod
 	nodes = &v1.NodeList{}
 	for _, nextIP := range externalIPs {
 		nextNode := v1.Node{
-			ObjectMeta: metav1.ObjectMeta{Name: nextIP, Labels: map[string]string{K8sPublicIpAddressLabel: nextIP}},
+			ObjectMeta: metav1.ObjectMeta{Name: nextIP, Labels: map[string]string{K8sPublicIPAddressLabel: nextIP}},
 		}
 		if !privateWorker {
 			nextNode.Status = v1.NodeStatus{

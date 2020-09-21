@@ -1,5 +1,6 @@
 // Copyright (C) 2020, Oracle and/or its affiliates.
 // Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
+
 package handlers
 
 import (
@@ -12,13 +13,14 @@ import (
 	restgo "k8s.io/client-go/rest"
 )
 
-// struct representing kubernetes rest client & clientset
+// K8s struct representing kubernetes rest client & clientset
 type K8s struct {
 	RestClient restgo.Interface
 	ClientSet  k8sgo.Interface
 	Config     *restgo.Config
 }
 
+// NewK8s returns a new K8s struct
 func NewK8s(cfg *restgo.Config) (*K8s, error) {
 
 	client := K8s{}

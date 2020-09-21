@@ -1,5 +1,6 @@
 // Copyright (C) 2020, Oracle and/or its affiliates.
 // Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
+
 package handlers
 
 import (
@@ -15,19 +16,19 @@ import (
 
 	"github.com/Jeffail/gabs/v2"
 	"sigs.k8s.io/yaml"
-
 )
 
 var (
-	PrometheusConfigEmptyFile                   = errors.New("Error: Invalid Prometheus YAML: it is empty. Please do a get of the existing Prometheus config file and append to it.")
-	PrometheusConfigScrapeIntervalNotDefined    = errors.New("Error: Invalid Prometheus YAML: it does not have the mandatory name global.scrape_interval. Please do a get of the existing Prometheus config file and append to it.")
-	PrometheusConfigRuleFilesNotDefined         = errors.New("Error: Prometheus YAML does not have rule_files defined. Please do a get of the existing Prometheus config file and append to it.")
-	PrometheusConfigJobsNotDefined              = errors.New("Error: Prometheus YAML does not have scrape_configs jobs defined. Please do a get of the existing Prometheus config file and append to it.")
-	PrometheusConfigJobPrometheusNotDefined     = errors.New("Error: Prometheus YAML does not have job scrape_configs[0].job_name=prometheus defined. Please do a get of the existing Prometheus config file and append to it.")
-	PrometheusConfigJobPushGatewayNotDefined    = errors.New("Error: Prometheus YAML does not have job scrape_configs[1].job_name=PushGateway defined. Please do a get of the existing Prometheus config file and append to it.")
-	PrometheusConfigJobKubernetesPodsNotDefined = errors.New("Error: Prometheus YAML does not have job scrape_configs[2].job_name=kubernetes-pods defined. Please do a get of the existing Prometheus config file and append to it.")
+	errPrometheusConfigEmptyFile                   = errors.New("Error: Invalid Prometheus YAML: it is empty. Please do a get of the existing Prometheus config file and append to it")
+	errPrometheusConfigScrapeIntervalNotDefined    = errors.New("Error: Invalid Prometheus YAML: it does not have the mandatory name global.scrape_interval. Please do a get of the existing Prometheus config file and append to it")
+	errPrometheusConfigRuleFilesNotDefined         = errors.New("Error: Prometheus YAML does not have rule_files defined. Please do a get of the existing Prometheus config file and append to it")
+	errPrometheusConfigJobsNotDefined              = errors.New("Error: Prometheus YAML does not have scrape_configs jobs defined. Please do a get of the existing Prometheus config file and append to it")
+	errPrometheusConfigJobPrometheusNotDefined     = errors.New("Error: Prometheus YAML does not have job scrape_configs[0].job_name=prometheus defined. Please do a get of the existing Prometheus config file and append to it")
+	errPrometheusConfigJobPushGatewayNotDefined    = errors.New("Error: Prometheus YAML does not have job scrape_configs[1].job_name=PushGateway defined. Please do a get of the existing Prometheus config file and append to it")
+	errPrometheusConfigJobKubernetesPodsNotDefined = errors.New("Error: Prometheus YAML does not have job scrape_configs[2].job_name=kubernetes-pods defined. Please do a get of the existing Prometheus config file and append to it")
 )
 
+// GetPrometheusConfig returns the Prometheus configuration.
 func (k *K8s) GetPrometheusConfig(w http.ResponseWriter, r *http.Request) {
 
 	mapPath := PrometheusConfigMapPath
@@ -35,7 +36,7 @@ func (k *K8s) GetPrometheusConfig(w http.ResponseWriter, r *http.Request) {
 	keyName := PrometheusConfigFileName
 
 	// Was a timestamp provided?
-	var version = ""
+	var version string
 	if len(r.FormValue("version")) > 0 {
 		version = r.FormValue("version")
 
@@ -78,6 +79,7 @@ func (k *K8s) GetPrometheusConfig(w http.ResponseWriter, r *http.Request) {
 	success(w, configValue)
 }
 
+// GetPrometheusVersions returns the Prometheus version.
 func (k *K8s) GetPrometheusVersions(w http.ResponseWriter, r *http.Request) {
 
 	var result []byte
@@ -108,6 +110,7 @@ func (k *K8s) GetPrometheusVersions(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// PutPrometheusConfig saves the Prometheus configuration.
 func (k *K8s) PutPrometheusConfig(w http.ResponseWriter, r *http.Request) {
 	b, e := ioutil.ReadAll(r.Body)
 	if e != nil {
@@ -180,10 +183,10 @@ func (k *K8s) PutPrometheusConfig(w http.ResponseWriter, r *http.Request) {
 			if j < MaxBackupFiles {
 				continue
 			}
-                        // Delete any backups that are MaxBackupHours or older.
-                        if k.isOldVersion(keyList[j], PrometheusConfigFileName, timeNow) {
-                                delete(savedConfigMap, keyList[j])
-                        }
+			// Delete any backups that are MaxBackupHours or older.
+			if k.isOldVersion(keyList[j], PrometheusConfigFileName, timeNow) {
+				delete(savedConfigMap, keyList[j])
+			}
 		}
 	}
 
@@ -207,21 +210,21 @@ func (k *K8s) PutPrometheusConfig(w http.ResponseWriter, r *http.Request) {
 	accepted(w, "The Prometheus configuration is being updated.")
 }
 
-// "Validate that the Prometheus config contains all the stuff VMI team added"
+// ValidateVMIPrometheusElements validates the Prometheus configuration.
 func ValidateVMIPrometheusElements(g *gabs.Container) (bool, error) {
 	var scrapeConfig = "scrape_configs"
 	var jobNameParameter = "job_name"
 	var configString = g.String()
-	log(LevelInfo, "%s", "Prometheus Config: "+ g.String() )
+	log(LevelInfo, "%s", "Prometheus Config: "+g.String())
 
-	if  configString == "null" {
-		return false, PrometheusConfigEmptyFile
+	if configString == "null" {
+		return false, errPrometheusConfigEmptyFile
 	}
 	if !g.ExistsP("global.scrape_interval") {
-		return false, PrometheusConfigScrapeIntervalNotDefined
+		return false, errPrometheusConfigScrapeIntervalNotDefined
 	}
 	if !g.ExistsP("rule_files") {
-		return false, PrometheusConfigRuleFilesNotDefined
+		return false, errPrometheusConfigRuleFilesNotDefined
 	}
 
 	noOfScrapeConfigs, e := g.ArrayCountP(scrapeConfig)
@@ -230,7 +233,7 @@ func ValidateVMIPrometheusElements(g *gabs.Container) (bool, error) {
 		return false, e
 	}
 	if noOfScrapeConfigs < 3 {
-		return false, PrometheusConfigJobsNotDefined
+		return false, errPrometheusConfigJobsNotDefined
 	}
 
 	jobNameElement, e := g.ArrayElementP(0, scrapeConfig)
@@ -241,7 +244,7 @@ func ValidateVMIPrometheusElements(g *gabs.Container) (bool, error) {
 	}
 
 	if jobName != "prometheus" {
-		return false, PrometheusConfigJobPrometheusNotDefined
+		return false, errPrometheusConfigJobPrometheusNotDefined
 	}
 
 	jobNameElement, e = g.ArrayElementP(1, scrapeConfig)
@@ -252,7 +255,7 @@ func ValidateVMIPrometheusElements(g *gabs.Container) (bool, error) {
 	}
 
 	if jobName != "PushGateway" {
-		return false, PrometheusConfigJobPushGatewayNotDefined
+		return false, errPrometheusConfigJobPushGatewayNotDefined
 	}
 
 	jobNameElement, e = g.ArrayElementP(2, scrapeConfig)
@@ -263,7 +266,7 @@ func ValidateVMIPrometheusElements(g *gabs.Container) (bool, error) {
 	}
 
 	if jobName != "kubernetes-pods" {
-		return false, PrometheusConfigJobKubernetesPodsNotDefined
+		return false, errPrometheusConfigJobKubernetesPodsNotDefined
 	}
 
 	return true, nil
