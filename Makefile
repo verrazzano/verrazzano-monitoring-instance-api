@@ -4,8 +4,7 @@
 NAME:=verrazzano-monitoring-instance-api
 
 DOCKER_IMAGE_NAME ?= ${NAME}-dev
-TAG=$(shell git rev-parse HEAD)
-DOCKER_IMAGE_TAG = ${TAG}
+DOCKER_IMAGE_TAG ?= local-$(shell git rev-parse --short HEAD)
 
 ifeq ($(MAKECMDGOALS),$(filter $(MAKECMDGOALS),push push-tag))
 ifndef DOCKER_REPO
