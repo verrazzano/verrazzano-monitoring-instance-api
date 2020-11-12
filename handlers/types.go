@@ -4,11 +4,10 @@
 package handlers
 
 import (
-	"github.com/golang/glog"
+	"go.uber.org/zap"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
-
 	k8sgo "k8s.io/client-go/kubernetes"
 	restgo "k8s.io/client-go/rest"
 )
@@ -22,9 +21,7 @@ type K8s struct {
 
 // NewK8s returns a new K8s struct
 func NewK8s(cfg *restgo.Config) (*K8s, error) {
-
 	client := K8s{}
-
 	// Initialize REST client
 	s := schema.GroupVersion{Group: VMIGroup, Version: VMIVersion}
 	cfg.GroupVersion = &s
@@ -34,13 +31,13 @@ func NewK8s(cfg *restgo.Config) (*K8s, error) {
 
 	myRestClient, err := restgo.RESTClientFor(cfg)
 	if err != nil {
-		glog.Errorf("failure")
+		zap.S().Errorf("failure, Error: %s", err.Error())
 	}
 	client.RestClient = myRestClient
 
 	client.ClientSet, err = k8sgo.NewForConfig(cfg)
 	if err != nil {
-		glog.Errorf("failure")
+		zap.S().Errorf("failure, Error: %s", err.Error())
 	}
 	// config is needed later when building SPDY executor; save in client
 	client.Config = cfg
