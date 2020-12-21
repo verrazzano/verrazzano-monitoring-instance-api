@@ -1,7 +1,7 @@
 # Copyright (C) 2020, Oracle and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
-# Provide promtool binary from the prometheus image 
+# Provide promtool binary from the prometheus image
 FROM container-registry.oracle.com/olcne/prometheus:v2.13.1 AS build_base_prometheus
 
 FROM container-registry.oracle.com/os/oraclelinux:7-slim@sha256:fcc6f54bb01fc83319990bf5fa1b79f1dec93cbb87db3c5a8884a5a44148e7bb AS build_base
@@ -38,6 +38,9 @@ ENV GOROOT /usr/lib/golang
 RUN /go/bin/swagger generate spec -o ./static/cirith.json ./...
 
 FROM container-registry.oracle.com/os/oraclelinux:7-slim@sha256:fcc6f54bb01fc83319990bf5fa1b79f1dec93cbb87db3c5a8884a5a44148e7bb AS final
+
+RUN yum update -y \
+    && yum install -y ca-certificates curl openssl && yum clean all && rm -rf /var/cache/yum
 
 # Add cirith user/group
 RUN groupadd -r cirith && useradd --no-log-init -r -g cirith -u 1000 cirith
