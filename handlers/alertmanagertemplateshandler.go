@@ -40,7 +40,7 @@ func (k *K8s) GetAlertmanagerTemplate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	vmi, e := k.getVMIJson()
+	vmi, _ := k.getVMIJson()
 	amTemplateMapName := vmi.Path(AlertmanagerTemplatesConfigMapPath).Data().(string)
 	templatesMap, e := k.getConfigMapByName(amTemplateMapName)
 	if e != nil {
@@ -71,7 +71,7 @@ func (k *K8s) DeleteAlertmanagerTemplate(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	vmi, e := k.getVMIJson()
+	vmi, _ := k.getVMIJson()
 	amTemplateMapName := vmi.Path(AlertmanagerTemplatesConfigMapPath).Data().(string)
 	templatesMap, e := k.getConfigMapByName(amTemplateMapName)
 	if e != nil {
