@@ -2,9 +2,12 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
 # Provide promtool binary from the prometheus image
-FROM container-registry.oracle.com/olcne/prometheus:v2.13.1 AS build_base_prometheus
+FROM ghcr.io/verrazzano/prometheus:v2.13.1-3 AS build_base_prometheus
 
 FROM ghcr.io/oracle/oraclelinux:7-slim AS build_base
+
+RUN yum-config-manager --enable ol7_optional_latest && \
+    yum-config-manager --enable ol7_addons
 
 RUN yum update -y \
     && yum-config-manager --save --setopt=ol7_ociyum_config.skip_if_unavailable=true \
@@ -39,8 +42,13 @@ RUN /go/bin/swagger generate spec -o ./static/cirith.json ./...
 
 FROM ghcr.io/oracle/oraclelinux:7-slim AS final
 
-RUN yum update -y \
-    && yum install -y ca-certificates curl openssl && yum clean all && rm -rf /var/cache/yum
+RUN yum-config-manager --enable ol7_optional_latest && \
+    yum-config-manager --enable ol7_addons
+
+RUN yum update -y && \
+    yum-config-manager --enable ol7_u8_security_validation \
+    && yum install -y openssl \
+    && yum install -y ca-certificates curl && yum clean all && rm -rf /var/cache/yum
 
 # Add cirith user/group
 RUN groupadd -r cirith && useradd --no-log-init -r -g cirith -u 1000 cirith
